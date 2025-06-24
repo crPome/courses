@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste de Courses Interactive</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .item-checked {
+            text-decoration: line-through;
+            color: #9ca3af; /* gray-400 */
+        }
+        .item-hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-gray-800">
+
+    <div class="container mx-auto max-w-3xl p-4 sm:p-6 md:p-8">
+
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-slate-800">Liste de Courses</h1>
+            <p class="text-slate-500 mt-2">Cochez les articles au fur et à mesure de vos achats.</p>
+        </header>
+
+        <div class="sticky top-0 bg-stone-50 py-4 z-10">
+            <div class="w-full bg-gray-200 rounded-full h-4 mb-4 overflow-hidden">
+                <div id="progress-bar" class="bg-teal-600 h-4 rounded-full text-center text-white text-xs font-bold transition-all duration-500" style="width: 0%"></div>
+            </div>
+            <div class="flex justify-between items-center">
+                 <p id="progress-text" class="text-sm font-semibold text-teal-700">0% complété</p>
+                <div class="flex space-x-2">
+                    <button id="toggle-completed-btn" class="px-3 py-1.5 text-xs font-semibold text-slate-600 bg-white border border-slate-300 rounded-lg hover:bg-slate-100 transition-colors">
+                        Cacher cochés
+                    </button>
+                    <button id="reset-btn" class="px-3 py-1.5 text-xs font-semibold text-white bg-rose-600 rounded-lg hover:bg-rose-700 transition-colors">
+                        Réinitialiser
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <main class="mt-8 space-y-8">
+            
+            <!-- Légumes & Fruits -->
+            <section>
+                <h2 class="text-2xl font-semibold border-b-2 border-teal-200 pb-2 mb-4 text-slate-700">🥕 Légumes & Fruits</h2>
+                <div id="list-container-legumes" class="space-y-3">
+                    <!-- Items will be injected here -->
+                </div>
+            </section>
+
+            <!-- Protéines -->
+            <section>
+                <h2 class="text-2xl font-semibold border-b-2 border-teal-200 pb-2 mb-4 text-slate-700">🍗 Protéines</h2>
+                <div id="list-container-proteines" class="space-y-3">
+                    <!-- Items will be injected here -->
+                </div>
+            </section>
+
+            <!-- Produits laitiers & Alternatives -->
+            <section>
+                <h2 class="text-2xl font-semibold border-b-2 border-teal-200 pb-2 mb-4 text-slate-700">🥛 Produits laitiers & Alternatives</h2>
+                <div id="list-container-laitiers" class="space-y-3">
+                    <!-- Items will be injected here -->
+                </div>
+            </section>
+
+            <!-- Céréales & Légumineuses -->
+            <section>
+                <h2 class="text-2xl font-semibold border-b-2 border-teal-200 pb-2 mb-4 text-slate-700">🍞 Céréales & Légumineuses</h2>
+                <div id="list-container-cereales" class="space-y-3">
+                    <!-- Items will be injected here -->
+                </div>
+            </section>
+
+            <!-- Huiles, Condiments & Épices -->
+            <section>
+                <h2 class="text-2xl font-semibold border-b-2 border-teal-200 pb-2 mb-4 text-slate-700">🧂 Huiles, Condiments & Épices</h2>
+                <div id="list-container-epices" class="space-y-3">
+                    <!-- Items will be injected here -->
+                </div>
+            </section>
+
+            <!-- Graines & Fruits secs -->
+            <section>
+                <h2 class="text-2xl font-semibold border-b-2 border-teal-200 pb-2 mb-4 text-slate-700">🌰 Graines & Fruits secs</h2>
+                <div id="list-container-graines" class="space-y-3">
+                    <!-- Items will be injected here -->
+                </div>
+            </section>
+            
+            <!-- Autres -->
+            <section>
+                <h2 class="text-2xl font-semibold border-b-2 border-teal-200 pb-2 mb-4 text-slate-700">✨ Autres (facultatif)</h2>
+                <div id="list-container-autres" class="space-y-3">
+                    <!-- Items will be injected here -->
+                </div>
+            </section>
+
+        </main>
+        
+        <footer class="text-center mt-12 text-sm text-slate-400">
+            <p>Bonnes courses !</p>
+        </footer>
+
+    </div>
+
+    <script>
+        const shoppingData = {
+            legumes: [
+                "Épinards frais (plusieurs sacs/barquettes)", "Brocoli (1-2 têtes)", "Chou-fleur (1 tête)", "Poivrons (variés - 3-4 pièces)", "Courgettes (2-3 pièces)", "Tomates (grappes, cerises - 1-2kg)", "Concombre (2-3 pièces)", "Oignons (jaunes, rouges)", "Ail (1 tête)", "Gingembre frais (un petit morceau)", "Laitue (romaine ou autre)", "Champignons frais (une barquette)", "Haricots verts (frais ou surgelés)", "Carottes (1kg)", "Poireaux (2-3 pièces)", "Patates douces (2-3 petites)", "Panais (2-3 pièces - facultatif)", "Pommes (2-4 pièces)", "Poires (2-4 pièces)", "Bananes (2-3 pièces)", "Orange (1-2 pièces)", "Fruits rouges (frais ou surgelés)"
+            ],
+            proteines: [
+                "Œufs (une douzaine)", "Filets de saumon (2 pièces)", "Blanc de poulet ou émincés (500-600g)", "Bœuf haché maigre (environ 300g)", "Thon au naturel (2-3 boîtes)", "Filets de cabillaud (2 pièces)", "Émincés de dinde (300-400g)", "Petit poulet entier ou 4 hauts de cuisse"
+            ],
+            laitiers: [
+                "Yaourt grec nature 0% ou Fromage blanc 0% (grand pot)", "Lait (écrémé ou végétal sans sucre ajouté)"
+            ],
+            cereales: [
+                "Pain complet ou pain de seigle (1-2 pains)", "Quinoa (un paquet)", "Riz basmati (un paquet)", "Lentilles corail (un paquet)", "Pâtes complètes (un paquet)", "Pois chiches (1-2 conserves)", "Farine de sarrasin ou blé complet"
+            ],
+            epices: [
+                "Huile d'olive extra vierge", "Vinaigre de cidre", "Sel et poivre", "Herbes de Provence", "Aneth frais ou séché", "Curry en poudre", "Cumin en poudre (modération)", "Paprika", "Thym, Romarin, Persil", "Cannelle", "Sauce soja allégée ou tamari"
+            ],
+            graines: [
+                "Graines de chia", "Noix de cajou (une petite barquette)", "Mélange de fruits secs (facultatif)"
+            ],
+            autres: [
+                "Protéines en poudre (smoothies/pancakes)", "Olives noires (petite quantité)"
+            ]
+        };
+
+        let itemsHidden = false;
+
+        function createListItem(text, category, index) {
+            const container = document.getElementById(`list-container-${category}`);
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'item-container bg-white p-3 rounded-lg shadow-sm flex items-center transition-all duration-300';
+            
+            const checkboxId = `${category}-${index}`;
+            
+            itemDiv.innerHTML = `
+                <input type="checkbox" id="${checkboxId}" class="h-5 w-5 rounded border-gray-300 text-teal-600 focus:ring-teal-500 accent-teal-600 mr-4">
+                <label for="${checkboxId}" class="flex-grow text-slate-700 cursor-pointer">${text}</label>
+            `;
+            
+            container.appendChild(itemDiv);
+
+            const checkbox = document.getElementById(checkboxId);
+            const label = itemDiv.querySelector('label');
+            
+            checkbox.addEventListener('change', () => {
+                label.classList.toggle('item-checked', checkbox.checked);
+                if (itemsHidden && checkbox.checked) {
+                    itemDiv.classList.add('item-hidden');
+                } else {
+                    itemDiv.classList.remove('item-hidden');
+                }
+                updateProgress();
+            });
+        }
+
+        function populateLists() {
+            Object.keys(shoppingData).forEach(category => {
+                shoppingData[category].forEach((item, index) => {
+                    createListItem(item, category, index);
+                });
+            });
+        }
+
+        function updateProgress() {
+            const allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
+            const checkedCheckboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+            const total = allCheckboxes.length;
+            const checkedCount = checkedCheckboxes.length;
+            const percentage = total > 0 ? (checkedCount / total) * 100 : 0;
+
+            const progressBar = document.getElementById('progress-bar');
+            const progressText = document.getElementById('progress-text');
+
+            progressBar.style.width = `${percentage}%`;
+            progressText.textContent = `${Math.round(percentage)}% complété (${checkedCount}/${total})`;
+        }
+
+        document.getElementById('reset-btn').addEventListener('click', () => {
+            const allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
+            allCheckboxes.forEach(checkbox => {
+                checkbox.checked = false;
+                checkbox.dispatchEvent(new Event('change'));
+            });
+            updateProgress();
+        });
+
+        document.getElementById('toggle-completed-btn').addEventListener('click', (e) => {
+            itemsHidden = !itemsHidden;
+            e.target.textContent = itemsHidden ? 'Afficher cochés' : 'Cacher cochés';
+            e.target.classList.toggle('bg-teal-100');
+            
+            const allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
+            allCheckboxes.forEach(checkbox => {
+                 const container = checkbox.closest('.item-container');
+                if (itemsHidden && checkbox.checked) {
+                    container.classList.add('item-hidden');
+                } else {
+                    container.classList.remove('item-hidden');
+                }
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            populateLists();
+            updateProgress();
+        });
+    </script>
+</body>
+</html>
